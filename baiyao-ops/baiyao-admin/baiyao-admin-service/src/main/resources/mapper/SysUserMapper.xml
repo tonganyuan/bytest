@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynby.platform.operation.biz.dao.SysUserMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ynby.platform.operation.api.pojo.entity.SysUser">
+		<id column="user_id" property="userId" />
+		<result column="username" property="username" />
+		<result column="nickname" property="nickname" />
+		<result column="password" property="password" />
+		<result column="salt" property="salt" />
+		<result column="avatar" property="avatar" />
+		<result column="email" property="email" />
+		<result column="phone" property="phone" />
+		<result column="sex" property="sex" />
+		<result column="status" property="status" />
+		<result column="del_flag" property="delFlag" />
+		<result column="gmt_create" property="gmtCreate" />
+		<result column="gmt_modified" property="gmtModified" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+        user_id, username, nickname, password, salt, avatar, email, phone, sex, status, del_flag, gmt_create, gmt_modified
+    </sql>
+
+	<select id="listPermByUserId" resultType="java.lang.String">
+		select sm.perms
+		from sys_user su
+		left join sys_user_role sur on su.user_id=sur.user_id
+		left join sys_role_menu srm on srm.role_id=sur.role_id
+		left join sys_menu sm on sm.menu_id=srm.menu_id
+		<where>
+			su.del_flag = 0
+			and su.user_id=#{userId}
+		</where>
+	</select>
+
+    <select id="selectUserPage" resultType="com.ynby.platform.operation.api.pojo.vo.UserVO">
+		select
+		t1.user_id, t1.username, GROUP_CONCAT(DISTINCT t5.role_name) roleName,
+		t1.nickname, t1.email, t1.phone, t1.avatar, t1.status, t1.gmt_create
+		from sys_user t1
+		left join sys_user_role t4 on t4.user_id = t1.user_id
+		left join sys_role t5 on t5.role_id in (select role_id from sys_user_role t6 where t6.user_id = t1.user_id)
+		<where>
+			t1.del_flag = 0
+			<if test="param.phone != null and param.phone != ''">
+				and t1.phone = #{param.phone}
+			</if>
+			<if test="param.status != null">
+				and t1.status = #{param.status}
+			</if>
+			<if test="param.roleId != null">
+				and t5.role_id = #{param.roleId}
+			</if>
+			<if test="param.username != null and param.username != ''">
+				and (t1.username like concat('%', #{param.username},'%') or t1.full_name like concat('%', #{param.username},'%'))
+			</if>
+			<if test="param.params != null ">
+				and date_format(t1.gmt_create,'%y%m%d') between date_format(#{param.params.beginTime},'%y%m%d') and date_format(#{param.params.endTime},'%y%m%d')
+			</if>
+		</where>
+		group by t1.user_id
+		order by t1.gmt_create desc
+    </select>
+</mapper>

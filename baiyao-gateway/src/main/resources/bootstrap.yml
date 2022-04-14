@@ -1,0 +1,54 @@
+spring:
+  profiles:
+    active: ${profiles.active}
+  application:
+    name: @artifactId@
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      #设置单个文件的大小
+      max-file-size: 10MB
+  cloud:
+    gateway:
+      httpclient:
+        # tcp建立连接时间，默认45s
+        connect-timeout: 3000
+        # 响应超时
+        response-timeout: 15s
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: baiyao-admin
+          uri: lb://baiyao-admin-service
+          predicates:
+            - Path=/operation/**
+      default-filters:
+        - StripPrefix=1
+
+# 锚点信息actual监控 localhost:port/actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
+
+# 日志配置
+logging:
+  config: classpath:logback-spring.xml
+  # Nacos 注册中心客户端心跳日志禁用 get changedGroupKeys:[] 刷屏 issue: md5校验比对出了bug
+  level:
+    com.alibaba.nacos.client.config.impl: WARN
+
+# 路由白名单
+white_paths:
+  /operation/user/login,
+  /operation/user/infos/*,
+  /operation/user/phone/**,
+  /operation/user/changePassword,
+  /operation/user/forgetPassword

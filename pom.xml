@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.ynby.platform</groupId>
+		<artifactId>baiyao-dependency</artifactId>
+		<version>1.4.6</version>
+	</parent>
+
+	<!-- 使用前请更改 -->
+	<groupId>com.ynby.initializer</groupId>
+	<artifactId>baiyao-initializer</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
+	<description>初始化项目</description>
+
+	<!-- 子模块 -->
+	<modules>
+		<module>baiyao-service-api</module>
+		<module>baiyao-gateway</module>
+		<module>baiyao-service-biz</module>
+		<module>baiyao-ops</module>
+	</modules>
+
+	<!-- 版本号集中管理 -->
+	<properties>
+		<!-- 项目环境 -->
+		<baiyao-initializer.version>1.0-SNAPSHOT</baiyao-initializer.version>
+	</properties>
+
+	<dependencies>
+
+	</dependencies>
+
+	<!-- ynby仓库拉取 -->
+	<repositories>
+		<repository>
+			<id>maven-releases</id>
+			<name>172.16.10.65 Repository</name>
+			<url>http://172.16.10.65:9081/repository/maven-public/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>nexus</id>
+			<name>nexus</name>
+			<url>http://172.16.10.65:9081/repository/maven-public/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.jks</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.jks</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+</project>

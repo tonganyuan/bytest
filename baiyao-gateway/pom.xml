@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.ynby.initializer</groupId>
+		<artifactId>baiyao-initializer</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>baiyao-gateway</artifactId>
+	<name>${project.artifactId}</name>
+	<description>网关</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.ynby.platform</groupId>
+			<artifactId>baiyao-common-cache</artifactId>
+			<version>${baiyao-base.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ynby.platform</groupId>
+			<artifactId>baiyao-common-unit</artifactId>
+			<version>${baiyao-base.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ynby.platform</groupId>
+					<artifactId>baiyao-common-config</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>javax.servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.ynby.platform</groupId>
+			<artifactId>baiyao-common-swagger</artifactId>
+			<version>${baiyao-base.version}</version>
+		</dependency>
+		<!-- Spring Cloud 依赖 -->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
+		<!--gateway-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-gateway</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-oauth2</artifactId>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

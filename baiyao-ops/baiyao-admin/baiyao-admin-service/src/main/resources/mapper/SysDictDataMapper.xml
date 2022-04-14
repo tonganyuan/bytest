@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynby.platform.operation.biz.dao.SysDictDataMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ynby.platform.operation.api.pojo.entity.SysDictData">
+        <id column="dict_code" property="dictCode" />
+        <result column="dict_type" property="dictType" />
+        <result column="dict_label" property="dictLabel" />
+        <result column="dict_value" property="dictValue" />
+        <result column="sort" property="sort" />
+        <result column="default_flag" property="defaultFlag" />
+        <result column="status" property="status" />
+		<result column="gmt_create" property="gmtCreate" />
+		<result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dict_code, dict_type, dict_label, dict_value, sort, default_flag, status, gmt_create, gmt_modified
+    </sql>
+
+</mapper>

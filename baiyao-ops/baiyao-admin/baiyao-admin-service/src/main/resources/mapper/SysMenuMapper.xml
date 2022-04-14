@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynby.platform.operation.biz.dao.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ynby.platform.operation.api.pojo.entity.SysMenu">
+        <id column="menu_id" property="menuId" />
+        <result column="parent_id" property="parentId" />
+        <result column="menu_name" property="menuName" />
+        <result column="perms" property="perms" />
+        <result column="path" property="path" />
+        <result column="component" property="component" />
+        <result column="icon" property="icon" />
+        <result column="sort" property="sort" />
+        <result column="menu_type" property="menuType" />
+        <result column="visible" property="visible" />
+        <result column="status" property="status" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        menu_id, parent_id, menu_name, perms, path, component, icon, sort, menu_type, visible, status, gmt_create, gmt_modified
+    </sql>
+
+	<!--通过角色查询菜单信息-->
+	<select id="listMenusByRoleId" resultMap="BaseResultMap">
+		SELECT
+		sys_menu.*
+		FROM
+		sys_menu
+		LEFT JOIN sys_role_menu ON sys_menu.menu_id = sys_role_menu.menu_id
+		WHERE
+		sys_role_menu.role_id = #{roleId} and sys_menu.status = 1
+		ORDER BY
+		sys_menu.sort ASC
+	</select>
+
+    <select id="selectMenuList" resultMap="BaseResultMap">
+		select sm.* from sys_menu sm
+		left join sys_role_menu srm on sm.menu_id = srm.menu_id
+		left join sys_user_role sur on sur.role_id = srm.role_id
+		left join sys_user su on sur.user_id = su.user_id
+		<where>
+			sm.menu_type in ('M', 'C')
+			<if test="userId != '' and userId != null">
+				and sur.user_id = #{userId}
+			</if>
+			<if test="menuName != null and menuName != ''">
+				and sm.menu_name like concat('%',#{menuName},'%')
+			</if>
+			<if test="status != null and status != ''">
+				and sm.status = #{status}
+			</if>
+		</where>
+    </select>
+
+    <select id="selectMenuListByRoleId" resultType="java.lang.Long">
+		select m.menu_id
+		from sys_menu m
+		left join sys_role_menu rm on m.menu_id = rm.menu_id
+		<where>
+			rm.role_id = #{roleId}
+			<if test="menuCheckStrictly">
+			and m.menu_id not in
+			(select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id = rm.menu_id and rm.role_id = #{roleId})
+			</if>
+		</where>
+		order by m.parent_id, m.sort
+	</select>
+</mapper>

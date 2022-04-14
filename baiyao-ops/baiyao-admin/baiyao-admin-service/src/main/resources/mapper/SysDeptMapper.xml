@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynby.platform.operation.biz.dao.SysDeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ynby.platform.operation.api.pojo.entity.SysDept">
+        <id column="dept_id" property="deptId" />
+        <result column="name" property="name" />
+        <result column="parent_id" property="parentId" />
+        <result column="ancestors" property="ancestors" />
+        <result column="leader" property="leader" />
+        <result column="phone" property="phone" />
+        <result column="sort" property="sort" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+		<result column="gmt_create" property="gmtCreate" />
+		<result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dept_id, name, parent_id, ancestors, leader, phone, sort, status, del_flag, gmt_create, gmt_modified
+    </sql>
+
+    <select id="selectMenuListByRoleId" resultType="java.lang.Long">
+		select d.dept_id
+		from sys_dept d
+		left join sys_role_dept rd on d.dept_id = rd.dept_id
+		where rd.role_id = #{roleId}
+		<if test="deptCheckStrictly">
+			and d.dept_id not in
+			(select d.parent_id from sys_dept d inner join sys_role_dept rd on d.dept_id = rd.dept_id and rd.role_id = #{roleId})
+		</if>
+		order by d.parent_id, d.sort
+    </select>
+</mapper>

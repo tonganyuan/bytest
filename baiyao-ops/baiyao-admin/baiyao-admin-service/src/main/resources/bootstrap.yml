@@ -1,0 +1,68 @@
+server:
+  tomcat:
+    min-spare-threads: 500
+    max-threads: 800
+    accept-count: 1000
+
+spring:
+  profiles:
+    active: ${profiles.active}
+  application:
+    name: @artifactId@
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      #设置单个文件的大小
+      max-file-size: 10MB
+
+# feign配置
+feign:
+  sentinel:
+    enabled: true
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+
+#设置feign客户端超时时间（OpenFeign集成了ribbon，超时由ribbon控制）
+ribbon:
+  ReadTimeout: 5000
+  ConnectTimeout: 5000
+  # 对当前实例的最大重试次数
+  MaxAutoRetries: 0
+  # 切换实例的最大重试次数
+  MaxAutoRetriesNextServer: 0
+
+# mybatis-plus配置
+mybatis-plus:
+  global-config:
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: auto
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      insert-strategy: not_empty
+  configuration:
+    cache-enabled: false
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/**/*Mapper.xml
+  typeAliasesPackage: com.ynby.platform.operation.api.pojo.entity
+
+# 锚点信息actual监控 localhost:port/actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
+
+# 日志配置
+logging:
+  config: classpath:logback-spring.xml
+  # Nacos 注册中心客户端心跳日志禁用 get changedGroupKeys:[] 刷屏 issue: md5校验比对出了bug
+  level:
+    com.alibaba.nacos.client.config.impl: WARN

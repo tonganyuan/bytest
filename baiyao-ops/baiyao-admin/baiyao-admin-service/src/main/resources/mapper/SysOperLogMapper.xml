@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ynby.platform.operation.biz.dao.SysOperLogMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.ynby.platform.operation.api.pojo.entity.SysOperLog">
+		<id column="oper_id" property="operId" />
+		<result column="username" property="username" />
+		<result column="fullname" property="fullname" />
+		<result column="oper_ip" property="operIp" />
+		<result column="title" property="title" />
+		<result column="business_type" property="businessType" />
+		<result column="browser" property="browser" />
+		<result column="gmt_create" property="gmtCreate" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+        oper_id, username, fullname, oper_ip, title, business_type, browser, gmt_create
+    </sql>
+
+	<select id="selectLogPage" parameterType="com.ynby.platform.operation.api.pojo.param.LogParam" resultType="com.ynby.platform.operation.api.pojo.vo.OperLogVO">
+		select username, fullname, oper_ip, title, business_type, browser, gmt_create
+		from sys_oper_log sol
+		<where>
+			<if test="param.username != null and param.username != ''">
+				and sol.username like concat('%', #{param.username},'%')
+			</if>
+			<if test="param.operTime != null and param.operTime != ''">
+				and sol.gmt_create
+					between concat(#{param.operTime}, ' 00:00:00')
+					and concat(#{param.operTime}, ' 23:59:59')
+			</if>
+			<if test="param.actionId != null and param.actionId != ''">
+				and sol.business_type = #{param.actionId}
+			</if>
+		</where>
+		ORDER BY gmt_create DESC
+	</select>
+</mapper>
